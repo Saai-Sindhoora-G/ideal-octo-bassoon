@@ -1,0 +1,103 @@
+Form 1
+
+Dim con As ADODB.Connection
+Dim rs As New ADODB.Recordset
+Private Sub btnExit1_Click()
+Unload Me
+End Sub
+Private Sub btnLogin1_Click()
+Form2.Show
+Unload Me
+End Sub
+Private Sub btnRegister_Click()
+Form3.Show
+Unload Me
+End Sub
+Private Sub Form_KeyPress(KeyAscii As Integer)
+Unload Me
+End Sub
+Private Sub Frame1_DragDrop(Source As Control, x As Single, Y As Single)
+End Sub
+
+Form 2
+
+Public con As ADODB.Connection
+Public rs As New ADODB.Recordset
+Private Sub btnCancel2_Click()
+Form1.Show
+Unload Me
+End Sub
+Private Sub btnLogin2_Click()
+Dim strrole As String
+Dim success As Boolean
+If (txtuserName.Text = "" Or txtPassword.Text = "") Then
+MsgBox ("Enter the User Name and Password")
+Else
+Set con = New ADODB.Connection
+Set rs = New ADODB.Recordset
+con.Open "Provider=MSDAORA.1;User ID=scott;Password=tiger;Persist Security Info=False"
+rs.Open "select 1,userrole from userlogin where username = '" & txtuserName.Text & "' and
+password = '" & txtPassword.Text & "'", con, adOpenKeyset, adLockOptimistic
+If rs.EOF = False Then
+success = CBool(rs.Fields(0))
+strrole = rs.Fields(1)
+End If
+If (success = True) Then
+If (strrole = "admin") Then
+MsgBox ("Admin")
+End If
+If (strrole = "student") Then
+MsgBox ("Student")
+End If
+Unload Me
+Else
+MsgBox "Please check the Username and Password!!"
+End If
+End If
+End Sub
+
+Form 3
+
+Public con As ADODB.Connection
+Public rs As New ADODB.Recordset
+Private Sub btnCancel_Click()
+Form1.Show
+Unload Me
+End Sub
+Private Sub btnRegister_Click()
+Dim strFirstName As String
+Dim strLastName As String
+Dim strAddress As String
+Dim strMobile As String
+Dim strGuardianName As String
+Dim strGMobile As String
+Dim strEmail As String
+Dim strProof As String
+Dim strRoomType As String
+strFirstName = txtFirstName.Text
+strLastName = txtLastName.Text
+strAddress = txtAddress.Text
+strMobile = txtMobile.Text
+strGuardianName = txtFathername.Text
+strGMobile = txtFno.Text
+strEmail = txtEmail.Text
+strProof = txtProof.Text
+If (rbtSingle = True) Then
+strRoomType = "Single"
+End If
+If (rbtDouble = True) Then
+strRoomType = "Double"
+End If
+If (rbtTriple = True) Then
+strRoomType = "Triple"
+End If
+Set con = New ADODB.Connection
+Set rs = New ADODB.Recordset
+con.Open "Provider=MSDAORA.1;User ID=scott;Password=tiger;Persist Security Info=False"
+ rs.Open "insert into student values ('" & strFirstName & "','" & strLastName & "','" &
+strAddress & "','" & strMobile & "','" & strGuardianName & "','" & strGMobile & "','" &
+strEmail & "','" & strProof & "','" & strRoomType & "')", con, adOpenKeyset, adLockOptimistic
+MsgBox "Successfully registered"
+Form2.Show
+Unload Me
+End Sub
